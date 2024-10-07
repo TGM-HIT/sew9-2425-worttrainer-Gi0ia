@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/sew9-2425-worttrainer-Gi0ia.iml" filepath="$PROJECT_DIR$/.idea/sew9-2425-worttrainer-Gi0ia.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/worttrainerRemake.iml" filepath="$PROJECT_DIR$/.idea/modules/worttrainerRemake.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/worttrainerRemake.main.iml" filepath="$PROJECT_DIR$/.idea/modules/worttrainerRemake.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/worttrainerRemake.test.iml" filepath="$PROJECT_DIR$/.idea/modules/worttrainerRemake.test.iml" />
     </modules>
   </component>
 </project>
