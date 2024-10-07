@@ -1,0 +1,1 @@
+Dies ist das Projekt Worttrainer, entwickelt mit Java und Gradle als Build-System.
