@@ -34,19 +34,30 @@ public class Statistics {
         incrementTotalAttempts();
     }
 
-    // get attempts
+    // getters
     public int getAttempts() {
         return attempts;
     }
 
-    // get correct
     public int getCorrectCount() {
         return correctCount;
     }
 
-    // get wrong
     public int getWrongCount() {
         return wrongCount;
+    }
+
+    // setters
+    public void setAttempts(int attempts) {
+        this.attempts = attempts;
+    }
+
+    public void setCorrectCount(int correctCount) {
+        this.correctCount = correctCount;
+    }
+
+    public void setWrongCount(int wrongCount) {
+        this.wrongCount = wrongCount;
     }
 
     // calculate success rate
@@ -65,7 +76,7 @@ public class Statistics {
     }
 
     // return stats as String
-    public String getStatistics() {
+    public String getStatisticsAsString() {
         return String.format(
                 "Total Attempts: %d, Correct Attempts: %d, Wrong Attempts: %d, Success Rate: %.2f%%",
                 attempts, correctCount, wrongCount, getSuccessRate()
