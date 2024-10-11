@@ -1,12 +1,14 @@
 package org.gfrolik;
 
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
  * CONTROLLER LAYER
  * Flashcard trainer
+ *
  * @author gioia
- * @version 2024-09-30
+ * @version 2024-10-11
  */
 public class FlashcardApp {
     private FlashcardDeck deck;
@@ -19,40 +21,56 @@ public class FlashcardApp {
         this.frontend = frontend;
     }
 
-    // start the training
+    // Start the training
     public void study() {
         boolean continueTraining = true;
 
-        // Lade den Trainerzustand oder setze einen neuen Zustand
-        deck.loadSession();
+        // Ask if the user wants to load an existing session or start a new one
+        int response = JOptionPane.showOptionDialog(null,
+                "Would you like to start a new session or load an existing one?",
+                "Session Selection",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                new String[]{"New Session", "Load Session"},
+                "New Session");
+
+        if (response == 1) {  // If the user chooses "Load Session"
+            deck.loadSession();
+        } else {  // If the user chooses "New Session"
+            deck.createNewSession();
+        }
 
         while (continueTraining) {
-            // Zufällig ein Wort-Bild-Paar auswählen
+            // Select a random word-image pair
             deck.selectRandomCard();
 
-            // Zeigt das Bild an und fordert den Benutzer zur Eingabe auf
-            String userInput = frontend.showImageWithPrompt(deck.getCurrentCard().getURL(), deck.getStatistics().getStatisticsAsString());
+            // Display the image instead of the URL
+            ImageIcon imageIcon = new ImageIcon(deck.getCurrentCard().getURL());
+            String statistics = deck.getStatistics().getStatisticsAsString();
 
-            // Überprüft die Benutzereingabe und zeigt die Rückmeldung
+            // Show the image and prompt the user for input
+            String userInput = frontend.showImageWithPrompt(imageIcon, statistics);
+
+            // Check the user input and display feedback
             if (userInput != null && !userInput.isEmpty()) {
                 boolean correct = deck.checkUserInput(userInput);
                 if (correct) {
-                    frontend.showMessage("Richtig!");
+                    frontend.showMessage("Correct!");
                 } else {
-                    frontend.showMessage("Falsch! Das richtige Wort ist: " + deck.getCurrentCard().getWord());
+                    frontend.showMessage("Incorrect! The correct word is: " + deck.getCurrentCard().getWord());
                 }
             } else {
-                // Abbrechen, wenn die Eingabe leer ist
+                // Stop if the input is empty
                 continueTraining = false;
             }
 
-            // Optional: Nach jeder Eingabe den Zustand speichern
+            // Optionally, save the session after each input
             deck.saveSession();
         }
 
-        // Training beenden und Statistiken zeigen
-        frontend.showMessage("Training beendet. Statistiken:\n" + deck.getStatistics());
-        deck.saveSession(); // Endzustand speichern
+        // End the training and show statistics
+        frontend.showMessage("Training finished. Statistics:\n" + deck.getStatistics());
+        deck.saveSession();  // Save final session state
     }
-
 }
