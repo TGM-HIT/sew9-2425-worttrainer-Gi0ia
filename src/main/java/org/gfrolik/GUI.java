@@ -1,21 +1,29 @@
 package org.gfrolik;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import java.net.URL;
 
+/**
+ * VIEW LAYER
+ * @author gioia
+ * @version 2024-10-11
+ */
 public class GUI {
 
-    // Zeigt das Bild und fordert den Benutzer zur Eingabe auf
-    public String showImageWithPrompt(URL imageUrl, String statistics) {
-        // Hier könntest du die URL als Bild in einer JOptionPane anzeigen.
-        // Für die Einfachheit gehen wir davon aus, dass die URL als Text gezeigt wird.
-        return JOptionPane.showInputDialog(
+    // Shows the image (as an ImageIcon) and prompts the user for input
+    public String showImageWithPrompt(ImageIcon image, String statistics) {
+        return (String) JOptionPane.showInputDialog(
                 null,
-                "Statistik: " + statistics + "\nBild: " + imageUrl + "\nGib das Wort ein:"
+                statistics + "\nPlease enter the correct word:",
+                "Flashcard Trainer",
+                JOptionPane.QUESTION_MESSAGE,
+                image,
+                null,
+                null
         );
     }
 
-    // Zeigt eine einfache Nachricht (z.B. richtig/falsch) an
+    // Shows a message (e.g., "Correct!" or "Incorrect!")
     public void showMessage(String message) {
         JOptionPane.showMessageDialog(null, message);
     }

@@ -192,4 +192,16 @@ public class FlashcardDeck {
     public void setLanguage(String language) {
         this.language = language;
     }
+
+    // Method to start a new session
+    public void createNewSession() throws MalformedURLException {
+        // Logic to initialize a new session with new flashcards and statistics
+        this.cards = new ArrayList<>();
+        this.stats.resetStatistics();
+        // Add flashcards to the deck
+        this.cards.add(new Flashcard(new URL("https://i.pinimg.com/originals/a4/4b/af/a44baf314bd7fda48430259e7365bf7f.jpg"), "spaghetti"));
+        this.cards.add(new Flashcard(new URL("https://www.radsport-wagner.at/wp-content/uploads/2023/06/516caf81670d0566f088d5f4fed58b30-e1704898281552.png"), "bicicletta"));
+        this.cards.add(new Flashcard(new URL("https://perfectdailygrind.com/es/wp-content/uploads/sites/2/2019/11/espresso.jpg"), "espresso"));
+
+    }
 }
