@@ -17,6 +17,12 @@ public class Statistics {
         this.wrongCount = 0;
     }
 
+    public Statistics(int total, int correct, int wrong) {
+        this.attempts = total;
+        this.correctCount = correct;
+        this.wrongCount = wrong;
+    }
+
     // increment attempt count
     public void incrementTotalAttempts() {
         this.attempts++;

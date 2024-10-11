@@ -7,35 +7,47 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 
+/**
+ * save & load JSON
+ * @author gioia
+ * @version 2024-10-11
+ */
 public class SaveLoadJSON implements SaveLoad {
 
     @Override
     public void save(FlashcardDeck deck, String filePath) throws IOException {
-        // Create a JSON object to hold the session data
-        JSONObject jsonTrainer = new JSONObject();
-        jsonTrainer.put("totalAttempts", deck.getStatistics().getAttempts());
-        jsonTrainer.put("correctAttempts", deck.getStatistics().getCorrectCount());
-        jsonTrainer.put("wrongAttempts", deck.getStatistics().getWrongCount());
+        // Create a JSONObject to store the session data
+        JSONObject jsonDeck = new JSONObject();
+        jsonDeck.put("deckName", deck.getDeckName());
+        jsonDeck.put("language", deck.getLanguage());
 
-        // Convert word-image pairs to JSON array
-        JSONArray jsonWordImagePairs = new JSONArray();
+        // Add statistics to the JSON object
+        JSONObject jsonStats = new JSONObject();
+        Statistics stats = deck.getStatistics();
+        jsonStats.put("totalAttempts", stats.getAttempts());
+        jsonStats.put("correctAttempts", stats.getCorrectCount());
+        jsonStats.put("wrongAttempts", stats.getWrongCount());
+        jsonDeck.put("statistics", jsonStats);
+
+        // Add flashcards to the JSON object
+        JSONArray jsonFlashcards = new JSONArray();
         for (Flashcard card : deck.getFlashcards()) {
-            JSONObject jsonPair = new JSONObject();
-            jsonPair.put("word", card.getWord());
-            jsonPair.put("imageUrl", card.getURL().toString());
-            jsonWordImagePairs.put(jsonPair);
+            JSONObject jsonCard = new JSONObject();
+            jsonCard.put("word", card.getWord());
+            jsonCard.put("imageUrl", card.getURL().toString());
+            jsonFlashcards.put(jsonCard);
         }
-        jsonTrainer.put("wordImagePairs", jsonWordImagePairs);
+        jsonDeck.put("flashcards", jsonFlashcards);
 
         // Write JSON object to file
         try (FileWriter file = new FileWriter(filePath)) {
-            file.write(jsonTrainer.toString(4)); // Indented output
+            file.write(jsonDeck.toString(4));  // Pretty-print with 4 space indentation
         }
     }
 
     @Override
     public FlashcardDeck load(String filePath) throws IOException {
-        // Read JSON file and parse it into a SpellingTrainer object
+        // Read the JSON file and parse it into a JSONObject
         FileReader reader = new FileReader(filePath);
         StringBuilder sb = new StringBuilder();
         int i;
@@ -44,25 +56,33 @@ public class SaveLoadJSON implements SaveLoad {
         }
         reader.close();
 
-        JSONObject jsonTrainer = new JSONObject(sb.toString());
-        FlashcardDeck deck = new FlashcardDeck();
+        JSONObject jsonDeck = new JSONObject(sb.toString());
 
-        // Load statistics
-        Statistics stats = new Statistics();
-        stats.setAttempts(jsonTrainer.getInt("totalAttempts"));
-        stats.setCorrectCount(jsonTrainer.getInt("correctAttempts"));
-        stats.setWrongCount(jsonTrainer.getInt("wrongAttempts"));
+        // Extract deck details
+        String deckName = jsonDeck.getString("deckName");
+        String language = jsonDeck.getString("language");
+
+        // Extract statistics
+        JSONObject jsonStats = jsonDeck.getJSONObject("statistics");
+        int totalAttempts = jsonStats.getInt("totalAttempts");
+        int correctAttempts = jsonStats.getInt("correctAttempts");
+        int wrongAttempts = jsonStats.getInt("wrongAttempts");
+
+        // Create FlashcardDeck and Statistics
+        FlashcardDeck deck = new FlashcardDeck();
+        deck.setDeckName(deckName);
+        deck.setLanguage(language);
+        Statistics stats = new Statistics(totalAttempts, correctAttempts, wrongAttempts);
         deck.setStatistics(stats);
 
-        // Load word-image pairs
-        JSONArray jsonWordImagePairs = jsonTrainer.getJSONArray("wordImagePairs");
-        for (int j = 0; j < jsonWordImagePairs.length(); j++) {
-            JSONObject jsonPair = jsonWordImagePairs.getJSONObject(j);
-            Flashcard pair = new Flashcard(
-                    jsonPair.getString("word"),
-                    new URL(jsonPair.getString("imageUrl"))
-            );
-            deck.addWordImagePair(pair);
+        // Extract flashcards
+        JSONArray jsonFlashcards = jsonDeck.getJSONArray("flashcards");
+        for (int j = 0; j < jsonFlashcards.length(); j++) {
+            JSONObject jsonCard = jsonFlashcards.getJSONObject(j);
+            String word = jsonCard.getString("word");
+            URL imageUrl = new URL(jsonCard.getString("imageUrl"));
+            Flashcard card = new Flashcard(imageUrl, word);
+            deck.addFlashcard(card);
         }
 
         return deck;

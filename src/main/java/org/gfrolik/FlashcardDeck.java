@@ -1,5 +1,7 @@
 package org.gfrolik;
 
+import javax.swing.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.*;
 import java.util.*;
@@ -78,6 +80,84 @@ public class FlashcardDeck {
 
     }
 
+    // resets the stats
+    public void resetTrainerStatistics() {
+        stats.resetStatistics();
+    }
+
+    // Save session method
+    public void saveSession() {
+        // Create a file chooser for the user to select where to save the file
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Save Session");
+
+        // Show the save dialog
+        int userSelection = fileChooser.showSaveDialog(null);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            String filePath = fileToSave.getAbsolutePath();
+
+            // Check the file extension to decide which saver to use
+            SaveLoad saver;
+            if (filePath.endsWith(".json")) {
+                saver = new SaveLoadJSON();  // Use JSON saver
+            } else if (filePath.endsWith(".txt")) {
+                saver = new SaveLoadTxt();   // Use Text saver
+            } else {
+                // If the user didn't specify a file extension, we assume text file as default
+                filePath += ".txt";
+                saver = new SaveLoadTxt();
+            }
+
+            // Attempt to save the session
+            try {
+                saver.save(this, filePath);  // Use the appropriate save method
+                System.out.println("Session saved to " + filePath);
+            } catch (IOException e) {
+                System.err.println("Error saving session: " + e.getMessage());
+            }
+        }
+    }
+
+    // Load session method
+    public void loadSession() {
+        // Create a file chooser
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Choose a session file to load");
+
+        // Show the file chooser dialog and capture the response
+        int userSelection = fileChooser.showOpenDialog(null);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToLoad = fileChooser.getSelectedFile();
+            String filePath = fileToLoad.getAbsolutePath();  // Get the file path
+
+            // Check the file extension to decide which loader to use
+            SaveLoad loader;
+            if (filePath.endsWith(".json")) {
+                loader = new SaveLoadJSON();  // Use JSON loader
+            } else if (filePath.endsWith(".txt")) {
+                loader = new SaveLoadTxt();   // Use Text loader
+            } else {
+                System.err.println("Unsupported file format.");
+                return;
+            }
+
+            // Attempt to load the session
+            try {
+                FlashcardDeck loadedDeck = loader.load(filePath);
+                this.cards = loadedDeck.getFlashcards();
+                this.stats = loadedDeck.getStatistics();
+                this.deckName = loadedDeck.getDeckName();
+                this.language = loadedDeck.getLanguage();
+                System.out.println("Session loaded from " + filePath);
+            } catch (IOException e) {
+                System.err.println("Error loading session: " + e.getMessage());
+            }
+        }
+    }
+
     // Getter and setter for statistics
     public Statistics getStatistics() {
         return stats;
@@ -87,38 +167,29 @@ public class FlashcardDeck {
         return currentCard;
     }
 
-    public void setStatistics(Statistics statistics) {
-        this.stats = statistics;
-    }
-    // resets the stats
-    public void resetTrainerStatistics() {
-        stats.resetStatistics();
+    public String getLanguage() {
+        return this.language;
     }
 
-    // Save session method
-    public void saveSession(SaveLoad saver, String filePath) {
-        try {
-            saver.save(this, filePath);
-            System.out.println("Session saved to " + filePath);
-        } catch (IOException e) {
-            System.err.println("Error saving session: " + e.getMessage());
-        }
-    }
-
-    // Load session method
-    public void loadSession(SaveLoad loader, String filePath) {
-        try {
-            FlashcardDeck loadDeck = loader.load(filePath);
-            this.cards = loadDeck.getFlashcards();
-            this.stats = loadDeck.getStatistics();
-            System.out.println("Session loaded from " + filePath);
-        } catch (IOException e) {
-            System.err.println("Error loading session: " + e.getMessage());
-        }
+    public String getDeckName() {
+        return this.deckName;
     }
 
 
     public void addFlashcard(Flashcard f) {
         this.cards.add(f);
+    }
+
+
+    public void setStatistics(Statistics statistics) {
+        this.stats = statistics;
+    }
+
+    public void setDeckName(String deckName) {
+        this.deckName = deckName;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }
