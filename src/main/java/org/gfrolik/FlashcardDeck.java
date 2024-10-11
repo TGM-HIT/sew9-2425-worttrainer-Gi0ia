@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.*;
 import java.util.*;
 import java.util.logging.*;
+import java.util.Random;
 
 
 /**
@@ -23,30 +24,37 @@ public class FlashcardDeck {
     private List<Flashcard> cards;
     private Statistics stats;
 
+    private Random random;
 
 
-    public FlashcardDeck(String deckName, String language, List<Flashcard> cards, Statistics stats) {
-        this.deckName = deckName;
-        this.language = language;
-        this.cards = cards;
-        this.stats = stats;
+    // Empty constructor (no initialization)
+    public FlashcardDeck() {
+        this.cards = new ArrayList<>();
+        this.stats = new Statistics();
+        this.random = new Random();this.random = new Random();
     }
 
-    public FlashcardDeck() {
-        List<Flashcard> flashcards = new ArrayList<>();
+    public void createNewSession() {
+        this.cards.clear(); // Clear existing cards if any
+        this.stats.resetStatistics(); // Reset statistics
+
+        // Add flashcards (you can dynamically set different flashcards)
         try {
-            flashcards.add(new Flashcard(new URL("https://i.pinimg.com/originals/a4/4b/af/a44baf314bd7fda48430259e7365bf7f.jpg"), "spaghetti"));
-            flashcards.add(new Flashcard(new URL("https://www.radsport-wagner.at/wp-content/uploads/2023/06/516caf81670d0566f088d5f4fed58b30-e1704898281552.png"), "bicicletta"));
-            flashcards.add(new Flashcard(new URL("https://perfectdailygrind.com/es/wp-content/uploads/sites/2/2019/11/espresso.jpg"), "espresso"));
+            this.cards.add(new Flashcard(new URL("https://i.pinimg.com/originals/a4/4b/af/a44baf314bd7fda48430259e7365bf7f.jpg"), "spaghetti"));
+            this.cards.add(new Flashcard(new URL("https://www.radsport-wagner.at/wp-content/uploads/2023/06/516caf81670d0566f088d5f4fed58b30-e1704898281552.png"), "bicicletta"));
+            this.cards.add(new Flashcard(new URL("https://perfectdailygrind.com/es/wp-content/uploads/sites/2/2019/11/espresso.jpg"), "espresso"));
+            this.cards.add(new Flashcard(new URL("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8XEpsxtXNlG8t10J3TomRvioh46sRXUg9GBtEQOft7JVJgCCQu7KEHiWa4ZlrL6TmQgk&usqp=CAU"), "verdura"));
+            this.cards.add(new Flashcard(new URL("https://www.spokin.com/wp-content/uploads/2022/06/gelato-hero-final.png"), "gelato"));
+            this.cards.add(new Flashcard(new URL("https://sothebys-com.brightspotcdn.com/a6/83/0d19eb4a429d991ff433f0cd94f3/ferrari-f40-3.jpg"), "ferarri"));
+
         } catch (MalformedURLException e) {
             LOGGER.log(Level.SEVERE, "Error while creating a URL for a flashcard", e);
         }
 
         this.deckName = "ITALIANO DECK 1";
         this.language = "italian";
-        this.cards = flashcards;
-        this.stats = new Statistics();
     }
+
 
     // set current card
     public void setCurrentCard(Flashcard currentCard) {
@@ -54,11 +62,13 @@ public class FlashcardDeck {
     }
 
     // select random card from deck
-    public Flashcard selectRandomCard() {
-        Random random = new Random();
-        Flashcard f = cards.get(random.nextInt(cards.size()));
-        setCurrentCard(f);
-        return f;
+    public void selectRandomCard() {
+        if (!cards.isEmpty()) {
+            int randomIndex = random.nextInt(cards.size());
+            this.currentCard = cards.get(randomIndex);
+        } else {
+            this.currentCard = null; // No more cards left
+        }
     }
 
     public List<Flashcard> getFlashcards() {
@@ -193,15 +203,5 @@ public class FlashcardDeck {
         this.language = language;
     }
 
-    // Method to start a new session
-    public void createNewSession() throws MalformedURLException {
-        // Logic to initialize a new session with new flashcards and statistics
-        this.cards = new ArrayList<>();
-        this.stats.resetStatistics();
-        // Add flashcards to the deck
-        this.cards.add(new Flashcard(new URL("https://i.pinimg.com/originals/a4/4b/af/a44baf314bd7fda48430259e7365bf7f.jpg"), "spaghetti"));
-        this.cards.add(new Flashcard(new URL("https://www.radsport-wagner.at/wp-content/uploads/2023/06/516caf81670d0566f088d5f4fed58b30-e1704898281552.png"), "bicicletta"));
-        this.cards.add(new Flashcard(new URL("https://perfectdailygrind.com/es/wp-content/uploads/sites/2/2019/11/espresso.jpg"), "espresso"));
 
-    }
 }

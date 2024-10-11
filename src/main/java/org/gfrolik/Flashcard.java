@@ -20,7 +20,7 @@ public class Flashcard {
 
     // constructor
     public Flashcard(URL frontURL, String backWord) {
-        if (isValid()) {
+        if (isValid(frontURL, backWord)) {
             this.URL = frontURL;
             this.word = backWord;
         } else {
@@ -35,24 +35,25 @@ public class Flashcard {
     }
 
 
-    // check if the values are valid
-    public boolean isValid() {
-        // Check if 'word' is null
-        if (this.word == null || this.word.isEmpty()) {
+    // Validate the provided URL and word
+    public boolean isValid(URL frontURL, String backWord) {
+        // Check if 'backWord' is not null and not empty
+        if (backWord == null || backWord.isEmpty()) {
             return false;
         }
 
-        // Check if 'URL' is not null and is valid
-        if (this.URL != null) {
+        // Check if 'frontURL' is not null and is valid
+        if (frontURL != null) {
             try {
                 // Convert the URL to a URI to check if it's valid
-                this.URL.toURI();  // URL has a toURI() method, which throws URISyntaxException if invalid
+                frontURL.toURI();
             } catch (URISyntaxException e) {
-                return false;  // Return false if the URL is invalid
+                return false;
             }
+        } else {
+            return false;
         }
-
-        return true;  // If no issues, return true
+        return true;
     }
 
 
