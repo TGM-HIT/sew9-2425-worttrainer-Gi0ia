@@ -30,3 +30,9 @@ jobs:
 
     - name: Package JAR
       run: ./gradlew jar
+
+    - name: Upload JAR as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: Worttrainer-JAR
+        path: build/libs/*.jar
