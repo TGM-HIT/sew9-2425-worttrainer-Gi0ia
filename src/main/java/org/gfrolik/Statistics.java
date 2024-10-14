@@ -84,7 +84,7 @@ public class Statistics {
     // return stats as String
     public String getStatisticsAsString() {
         return String.format(
-                "Total Attempts: %d, Correct Attempts: %d, Wrong Attempts: %d, Success Rate: %.2f%%",
+                "Total Attempts: %d\nCorrect Attempts: %d\nWrong Attempts: %d\nSuccess Rate: %.2f%%",
                 attempts, correctCount, wrongCount, getSuccessRate()
         );
     }

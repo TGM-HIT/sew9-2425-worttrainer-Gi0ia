@@ -12,7 +12,7 @@ public class StatisticsTest {
         stats.incrementCorrectAttempts();
         stats.incrementWrongAttempts();
         stats.incrementWrongAttempts();
-        String expected = "Total Attempts: 3\nCorrect Attempts: 1\nWrong Attempts: 2";
+        String expected = "Total Attempts: 3\nCorrect Attempts: 1\nWrong Attempts: 2\nSuccess Rate: 33.33%";
         assertEquals(expected, stats.getStatisticsAsString());
     }
 }

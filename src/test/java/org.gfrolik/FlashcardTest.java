@@ -16,8 +16,8 @@ public class FlashcardTest {
 
     @Test
     public void testIsValid_InvalidURL() throws MalformedURLException {
-        Flashcard flashcard = new Flashcard(new URL("ht:/invalid-url"), "word");
-        assertFalse(flashcard.isValid(new URL("ht:/invalid-url"), "word"));
+        Flashcard flashcard = new Flashcard(new URL("http://invalid-url.fake"), "word");
+        assertFalse(flashcard.isValid(new URL("http://invalid-url.fake"), "word"));
     }
 
     @Test

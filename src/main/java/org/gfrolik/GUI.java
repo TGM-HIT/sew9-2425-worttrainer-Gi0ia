@@ -13,7 +13,13 @@ public class GUI {
 
     // Shows the image (as an ImageIcon) and prompts the user for input
     public String showImageWithPrompt(ImageIcon image, String statistics) {
-        Image scaledImage = image.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH); // Scale the image
+        // calc the image
+        int newWidth = 300; // The desired width
+        int originalWidth = image.getIconWidth(); // Get original width
+        int originalHeight = image.getIconHeight(); // Get original height
+        int newHeight = (newWidth * originalHeight) / originalWidth; // Calculate the new height to maintain the aspect ratio
+
+        Image scaledImage = image.getImage().getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH); // Scale the image
         ImageIcon scaledIcon = new ImageIcon(scaledImage); // Create a new ImageIcon from the scaled image
 
         return (String) JOptionPane.showInputDialog(
