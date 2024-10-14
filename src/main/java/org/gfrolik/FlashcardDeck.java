@@ -19,7 +19,11 @@ public class FlashcardDeck {
     private String deckName;
     private String language;
     private static final Logger LOGGER = Logger.getLogger(Flashcard.class.getName());
-
+    HashMap<String, SaveLoad> savers = new HashMap<>();
+    {
+        savers.put("json", new SaveLoadJSON());
+        savers.put("txt", new SaveLoadTxt());
+    }
     private Flashcard currentCard;
     private List<Flashcard> cards;
     private Statistics stats;
@@ -104,16 +108,9 @@ public class FlashcardDeck {
             String filePath = fileToSave.getAbsolutePath();
 
             // Check the file extension to decide which saver to use
-            SaveLoad saver;
-            if (filePath.endsWith(".json")) {
-                saver = new SaveLoadJSON();  // Use JSON saver
-            } else if (filePath.endsWith(".txt")) {
-                saver = new SaveLoadTxt();   // Use Text saver
-            } else {
-                // If the user didn't specify a file extension, we assume text file as default
-                filePath += ".txt";
-                saver = new SaveLoadTxt();
-            }
+            // get file format (everything after .)
+            String ext = "";
+            SaveLoad saver = savers.get(ext);
 
             // Attempt to save the session
             try {
