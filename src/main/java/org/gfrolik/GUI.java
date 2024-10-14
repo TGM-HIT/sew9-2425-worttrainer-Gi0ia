@@ -7,13 +7,13 @@ import java.net.URL;
 /**
  * VIEW LAYER
  * @author gioia
- * @version 2024-10-11
+ * @version 2024-10-14
  */
 public class GUI {
 
     // Shows the image (as an ImageIcon) and prompts the user for input
     public String showImageWithPrompt(ImageIcon image, String statistics) {
-        // calc the image
+        // calc the image to scale it correct
         int newWidth = 300; // The desired width
         int originalWidth = image.getIconWidth(); // Get original width
         int originalHeight = image.getIconHeight(); // Get original height
