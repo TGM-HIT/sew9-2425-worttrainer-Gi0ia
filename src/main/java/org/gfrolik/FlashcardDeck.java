@@ -90,11 +90,6 @@ public class FlashcardDeck {
 
     }
 
-    // resets the stats
-    public void resetTrainerStatistics() {
-        stats.resetStatistics();
-    }
-
     // Save session method
     public void saveSession() {
         // Create a file chooser for the user to select where to save the file

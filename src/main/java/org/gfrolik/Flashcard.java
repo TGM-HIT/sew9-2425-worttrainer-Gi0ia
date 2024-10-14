@@ -1,8 +1,6 @@
 package org.gfrolik;
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.IOException;
+import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,12 +16,14 @@ public class Flashcard {
     private URL URL;
     private String word;
 
-    // constructor
+
+    // Constructor
     public Flashcard(URL frontURL, String backWord) {
         if (isValid(frontURL, backWord)) {
             this.URL = frontURL;
             this.word = backWord;
         } else {
+            // Fallback URL and word
             try {
                 URI uri = new URI("https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Brigittenau_%28Wien%29_-_TGM-Hauptgeb%C3%A4ude.JPG/280px-Brigittenau_%28Wien%29_-_TGM-Hauptgeb%C3%A4ude.JPG");
                 this.URL = uri.toURL();  // Convert URI to URL
@@ -33,7 +33,6 @@ public class Flashcard {
             this.word = "tgm";
         }
     }
-
 
     // Validate the provided URL and word
     public boolean isValid(URL frontURL, String backWord) {
@@ -47,15 +46,21 @@ public class Flashcard {
             try {
                 // Convert the URL to a URI to check if it's valid
                 frontURL.toURI();
-            } catch (URISyntaxException e) {
+                // Establish a connection to check if the URL is reachable
+                URLConnection connection = frontURL.openConnection();
+                connection.setConnectTimeout(5000); // 5 Sekunden Timeout
+                connection.connect();  // Connect to check validity
+            } catch (URISyntaxException | IOException e) {
+                // URL is invalid
                 return false;
             }
         } else {
             return false;
         }
+
+        // If all checks pass, the URL and word are valid
         return true;
     }
-
 
     // return the URL (front)
     public java.net.URL getURL() {
